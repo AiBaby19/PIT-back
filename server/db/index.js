@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-const pool = mysql.createPool({
+const db = mysql.createPool({
   connectionLimit: 10,
   password: '123456789',
   user: 'root',
@@ -12,8 +12,10 @@ const pool = mysql.createPool({
 const tasks = {};
 
 tasks.all = () => {
+  const getAllTasks = 'SELECT * FROM tasks';
+
   return new Promise((resolve, reject) => {
-    pool.query('SELECT * FROM tasks', (err, results) => {
+    db.query(getAllTasks, (err, results) => {
       if (err) return reject(err);
 
       return resolve(results);
@@ -22,8 +24,10 @@ tasks.all = () => {
 };
 
 tasks.one = (id) => {
+  const getTask = 'SELECT * FROM tasks WHERE id = ?';
+
   return new Promise((resolve, reject) => {
-    pool.query('SELECT * FROM tasks WHERE id = ?', [id], (err, results) => {
+    db.query(getTask, [id], (err, results) => {
       if (err) return reject(err);
 
       return resolve(results[0]);
@@ -31,23 +35,49 @@ tasks.one = (id) => {
   });
 };
 
-tasks.post = async ({name, phone, email, date}) => {
-    // const transform = (value) => {
-    //     return mysql.escape(value);
-    // }
+tasks.post = async ({ name, phone, email, date }) => {
+  const insertTask =
+    'INSERT INTO tasks(name, phone, email, date) values(?, ?, ?, ?)';
 
-  const insertQuery = `INSERT INTO tasks SET 
-    name=${name}
-    phone=${phone}
-    email=${mysql.escape(email)}
-    date=${mysql.escape(date)}
-    `;
+  const values = [name, phone, email, date];
+
+  return new Promise((resolve, reject) => {
+    db.query(insertTask, values, (err, results) => {
+      if (err) return reject(err);
+
+      return resolve(results);
+    });
+  });
+};
+
+tasks.delete = async (id) => {
+  const deleteTask = 'DELETE FROM tasks WHERE id = ?';
+
+  return new Promise((resolve, reject) => {
+    db.query(deleteTask, id, (err, results) => {
+      if (err) return reject(err);
+      console.log(results);
+      return resolve(results);
+    });
+  });
+};
+
+tasks.put = async ({ name, phone, email, date }, id) => {
+    // 'INSERT INTO tasks(name, phone, email, date) values(?, ?, ?, ?)';
+//   const updateTask =
+//     'UPDATE tasks (name, phone, email, date) values(?, ?, ?, ?),  WHERE id = ?';
+
+
+  const values = [name, phone, email, date, id];
+
+  const updateTask =
+    'UPDATE tasks SET name = ?, phone = ?, email = ?, date = ?  WHERE id = ?';
 
 
   return new Promise((resolve, reject) => {
-    pool.query(insertQuery, (err, results) => {
+    db.query(updateTask, values, (err, results) => {
       if (err) return reject(err);
-
+      console.log(results);
       return resolve(results);
     });
   });

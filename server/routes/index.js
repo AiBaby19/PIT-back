@@ -24,7 +24,7 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   const task = req.body;
-  
+
   try {
     const results = await db.post(task);
     res.json(results);
@@ -33,5 +33,25 @@ router.post('/', async (req, res, next) => {
     res.sendStatus(500, err);
   }
 });
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const results = await db.delete(req.params.id);
+    res.json(results);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500, err);
+  }
+});
+
+router.put('/:id', async (req, res, next) => {
+    try {
+      const results = await db.put(req.body, req.params.id);
+      res.json(results);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500, err);
+    }
+  });
 
 module.exports = router;
