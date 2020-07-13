@@ -1,21 +1,23 @@
-const mysql = require('mysql');
+import Task from '../interfaces/Task';
+import * as db from './index';
+// const db = require('./index');
 
-const db = mysql.createPool({
-  connectionLimit: 10,
-  password: '123456789',
-  user: 'root',
-  database: 'pit',
-  host: 'localhost',
-  port: '3306',
-});
+interface DB {
+  all: () => void;
+  one: (id: number) => void;
+  post: (task: Task) => void;
+  delete: (id: number) => void;
+  put: (task: Task, id: number) => void;
+}
 
-const tasks = {};
+// @ts-ignore
+const tasks: DB = {};
 
 tasks.all = () => {
   const getAllTasks = 'SELECT * FROM tasks';
-
+  
   return new Promise((resolve, reject) => {
-    db.query(getAllTasks, (err, results) => {
+    db.query(getAllTasks, (err: any, results: any) => {
       if (err) return reject(err);
 
       return resolve(results);
@@ -23,11 +25,11 @@ tasks.all = () => {
   });
 };
 
-tasks.one = (id) => {
+tasks.one = (id: number) => {
   const getTask = 'SELECT * FROM tasks WHERE id = ?';
 
   return new Promise((resolve, reject) => {
-    db.query(getTask, [id], (err, results) => {
+    db.query(getTask, [id], (err: any, results: any) => {
       if (err) return reject(err);
 
       return resolve(results[0]);
@@ -35,15 +37,14 @@ tasks.one = (id) => {
   });
 };
 
-tasks.post = async ({ name, phone, email, date }) => {
-    console.log(name, phone, email, date)
+tasks.post = async ({ name, phone, email, date }: Task) => {
   const insertTask =
     'INSERT INTO tasks(name, phone, email, date) values(?, ?, ?, ?)';
 
   const values = [name, phone, email, date];
 
   return new Promise((resolve, reject) => {
-    db.query(insertTask, values, (err, results) => {
+    db.query(insertTask, values, (err: any, results: any) => {
       if (err) return reject(err);
 
       return resolve(results);
@@ -51,11 +52,11 @@ tasks.post = async ({ name, phone, email, date }) => {
   });
 };
 
-tasks.delete = async (id) => {
+tasks.delete = async (id: number) => {
   const deleteTask = 'DELETE FROM tasks WHERE id = ?';
 
   return new Promise((resolve, reject) => {
-    db.query(deleteTask, id, (err, results) => {
+    db.query(deleteTask, id, (err: any, results: any) => {
       if (err) return reject(err);
 
       return resolve(results);
@@ -63,14 +64,14 @@ tasks.delete = async (id) => {
   });
 };
 
-tasks.put = async ({ name, phone, email, date }, id) => {
+tasks.put = async ({ name, phone, email, date }: Task, id: number) => {
   const updateTask =
     'UPDATE tasks SET name = ?, phone = ?, email = ?, date = ?  WHERE id = ?';
 
   const values = [name, phone, email, date, id];
 
   return new Promise((resolve, reject) => {
-    db.query(updateTask, values, (err, results) => {
+    db.query(updateTask, values, (err: any, results: any) => {
       if (err) return reject(err);
 
       return resolve(results);

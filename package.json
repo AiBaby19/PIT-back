@@ -4,17 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "ts-node-dev --respawn server/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx nodemon server/server.js -w server"
+    "dev": "nodemon --exec ts-node server/server.ts "
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/express": "^4.17.7",
+    "@types/mysql": "^2.15.15",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mysql": "^2.18.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.51",
+    "typescript": "^3.9.6"
   }
 }
