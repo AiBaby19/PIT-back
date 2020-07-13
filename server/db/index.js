@@ -56,28 +56,22 @@ tasks.delete = async (id) => {
   return new Promise((resolve, reject) => {
     db.query(deleteTask, id, (err, results) => {
       if (err) return reject(err);
-      console.log(results);
+
       return resolve(results);
     });
   });
 };
 
 tasks.put = async ({ name, phone, email, date }, id) => {
-    // 'INSERT INTO tasks(name, phone, email, date) values(?, ?, ?, ?)';
-//   const updateTask =
-//     'UPDATE tasks (name, phone, email, date) values(?, ?, ?, ?),  WHERE id = ?';
-
-
-  const values = [name, phone, email, date, id];
-
   const updateTask =
     'UPDATE tasks SET name = ?, phone = ?, email = ?, date = ?  WHERE id = ?';
 
+  const values = [name, phone, email, date, id];
 
   return new Promise((resolve, reject) => {
     db.query(updateTask, values, (err, results) => {
       if (err) return reject(err);
-      console.log(results);
+
       return resolve(results);
     });
   });
