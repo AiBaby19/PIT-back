@@ -36,6 +36,7 @@ tasks.one = (id) => {
 };
 
 tasks.post = async ({ name, phone, email, date }) => {
+    console.log(name, phone, email, date)
   const insertTask =
     'INSERT INTO tasks(name, phone, email, date) values(?, ?, ?, ?)';
 
