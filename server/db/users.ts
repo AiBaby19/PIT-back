@@ -1,6 +1,5 @@
 import { User } from '../interfaces/User';
 const db = require('./index');
-const crypto = require('crypto');
 
 interface DB {
   all: () => void;
@@ -39,20 +38,19 @@ users.auth = (userId: number, token: string) => {
   });
 };
 
-users.login = (email: string, password: string) => {
-  const getUser = 'SELECT id as userId, token FROM users WHERE email = ? AND password = ?';
+users.login = (email: string) => {
+  const getUser = 'SELECT id as userId, token, password FROM users WHERE email = ?';
 
   return new Promise((resolve, reject) => {
-    db.query(getUser, [email, password], (err: any, results: any) => {
+    db.query(getUser, [email], (err: any, results: any) => {
       if (err) return reject(err);
-      
+
       return resolve(results[0]);
     });
   });
 };
 
-users.register = async ({ email, password, isAdmin }: User) => {
-  const token = crypto.randomBytes(64).toString('hex');
+users.register = async ({ email, password, isAdmin, token }: User) => {
 
   const insertUser =
     'INSERT INTO users(email, password, isAdmin, token) values(?, ?, ?, ?)';

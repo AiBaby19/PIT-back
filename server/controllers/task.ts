@@ -1,9 +1,8 @@
-const express = require('express');
 import { Request, Response, NextFunction } from 'express';
-const { BadRequest, NotFound } = require('../utils/errors');
-
 import Task from '../interfaces/Task';
 
+const express = require('express');
+const { NotFound } = require('../utils/errors');
 const db = require('../db/tasks');
 const userDB = require('../db/users');
 
