@@ -1,11 +1,15 @@
 import express from 'express';
+require('dotenv').config();
+
+const handleErrors = require('./middleware/handleErrors');
+const { BadRequest } = require('./utils/errors');
 
 const taskController = require('./controllers/task');
-const userController = require('./controllers/user');
+const authController = require('./controllers/auth');
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
-require('dotenv').config();
+
 const app = express();
 
 app.use(express.json());
@@ -15,7 +19,9 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/api/tasks', taskController);
-app.use('/api/user', userController);
+app.use('/api/auth', authController);
+
+app.use(handleErrors);
 
 const port = process.env.PORT || '3001';
 

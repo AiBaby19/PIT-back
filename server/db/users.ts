@@ -25,16 +25,16 @@ users.all = () => {
 };
 
 users.auth = (userId: number, token: string) => {
+    console.log(userId, token)
   const getUser = 'SELECT isAdmin FROM users WHERE id = ? AND token = ?';
 
   return new Promise((resolve, reject) => {
     db.query(getUser, [userId, token], (err: any, results: any) => {
       if (err) {
-        console.log(err);
         return reject(err);
       }
-      console.log('res', results);
-      return resolve(!!results[0].isAdmin);
+
+      return resolve(!!results[0]?.isAdmin);
     });
   });
 };
@@ -44,16 +44,16 @@ users.login = (email: string, password: string) => {
 
   return new Promise((resolve, reject) => {
     db.query(getUser, [email, password], (err: any, results: any) => {
-      if (err) {
-        return reject(err);
-      }
-      return resolve({ userId: results[0]?.id, token: results[0]?.token });
+      if (err) return reject(err);
+
+      return resolve(results[0]);
     });
   });
 };
 
 users.register = async ({ email, password, isAdmin }: User) => {
   const token = crypto.randomBytes(64).toString('hex');
+
   const insertUser =
     'INSERT INTO users(email, password, isAdmin, token) values(?, ?, ?, ?)';
 
@@ -65,7 +65,7 @@ users.register = async ({ email, password, isAdmin }: User) => {
         return reject(err);
       }
 
-      return resolve({ token, userId: results.insertId });
+      return resolve({ token, userId: results?.insertId });
     });
   });
 };
