@@ -21,6 +21,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 router.post(
   '/login',
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log('login')
     try {
       const { email, password } = req.body;
 

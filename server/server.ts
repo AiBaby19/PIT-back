@@ -12,7 +12,7 @@ const cors = require('cors');
 const env = process.env.NODE_ENV || 'development';
 
 const app = express();
-
+console.log('express')
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
