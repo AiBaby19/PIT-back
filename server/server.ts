@@ -1,5 +1,5 @@
 import express from 'express';
-require('dotenv').config({ path: require('find-config')('.env') });
+require('dotenv').config({path:__dirname+ '/../.env'});
 
 const handleErrors = require('./middleware/handleErrors');
 
