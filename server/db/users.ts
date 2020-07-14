@@ -1,38 +1,53 @@
-import {User} from '../interfaces/User';
+import { User } from '../interfaces/User';
 const db = require('./index');
 
 interface DB {
-  getLoginToken: (password: string) => void;
+  all: () => void;
+  login: (email: string, password: string) => void;
   register: (user: User) => void;
 }
 
 // @ts-ignore
-const user: DB = {};
+const users: DB = {};
 
-// user.getLoginToken = (id: number) => {
-//   const getTask = 'SELECT * FROM tasks WHERE id = ?';
+users.all = () => {
+  const getAllUsers = 'SELECT * FROM users';
 
-//   return new Promise((resolve, reject) => {
-//     db.query(getTask, [id], (err: any, results: any) => {
-//       if (err) return reject(err);
+  return new Promise((resolve, reject) => {
+    db.query(getAllUsers, (err: any, results: any) => {
+      if (err) return reject(err);
 
-//       return resolve(results[0]);
-//     });
-//   });
-// };
+      return resolve(results);
+    });
+  });
+};
 
-user.register = async ({ email, password, isAdmin }: User) => {
-    console.log(email)
+users.login = (email: string, password: string) => {
+
+  const getUser = 'SELECT password FROM users WHERE email = ? AND password = ?';
+
+  return new Promise((resolve, reject) => {
+    db.query(getUser, [email, password], (err: any, results: any) => {
+      if (err) {
+          console.log(err)
+          return reject(err);
+      }
+      
+      return resolve(results[0]?.password);
+    });
+  });
+};
+
+users.register = async ({ email, password, isAdmin }: User) => {
   const insertUser =
     'INSERT INTO users(email, password, isAdmin) values(?, ?, ?)';
 
   const values = [email, password, isAdmin];
-
   return new Promise((resolve, reject) => {
     db.query(insertUser, values, (err: any, results: any) => {
       if (err) return reject(err);
 
-      return resolve(results);
+      return resolve(password);
     });
   });
 };
@@ -64,4 +79,4 @@ user.register = async ({ email, password, isAdmin }: User) => {
 //   });
 // };
 
-// module.exports = tasks;
+module.exports = users;
