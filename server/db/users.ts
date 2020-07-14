@@ -1,31 +1,15 @@
-// import Task from '../interfaces/Task';
-// const db = require('./index');
-// build here
+import {User} from '../interfaces/User';
+const db = require('./index');
 
-// interface DB {
-//   all: () => void;
-//   one: (id: number) => void;
-//   post: (task: Task) => void;
-//   delete: (id: number) => void;
-//   put: (task: Task, id: number) => void;
-// }
+interface DB {
+  getLoginToken: (password: string) => void;
+  register: (user: User) => void;
+}
 
-// // @ts-ignore
-// const tasks: DB = {};
+// @ts-ignore
+const user: DB = {};
 
-// tasks.all = () => {
-//   const getAllTasks = 'SELECT * FROM tasks';
-
-//   return new Promise((resolve, reject) => {
-//     db.query(getAllTasks, (err: any, results: any) => {
-//       if (err) return reject(err);
-
-//       return resolve(results);
-//     });
-//   });
-// };
-
-// tasks.one = (id: number) => {
+// user.getLoginToken = (id: number) => {
 //   const getTask = 'SELECT * FROM tasks WHERE id = ?';
 
 //   return new Promise((resolve, reject) => {
@@ -37,20 +21,21 @@
 //   });
 // };
 
-// tasks.post = async ({ name, phone, email, date }: Task) => {
-//   const insertTask =
-//     'INSERT INTO tasks(name, phone, email, date) values(?, ?, ?, ?)';
+user.register = async ({ email, password, isAdmin }: User) => {
+    console.log(email)
+  const insertUser =
+    'INSERT INTO users(email, password, isAdmin) values(?, ?, ?)';
 
-//   const values = [name, phone, email, date];
+  const values = [email, password, isAdmin];
 
-//   return new Promise((resolve, reject) => {
-//     db.query(insertTask, values, (err: any, results: any) => {
-//       if (err) return reject(err);
+  return new Promise((resolve, reject) => {
+    db.query(insertUser, values, (err: any, results: any) => {
+      if (err) return reject(err);
 
-//       return resolve(results);
-//     });
-//   });
-// };
+      return resolve(results);
+    });
+  });
+};
 
 // tasks.delete = async (id: number) => {
 //   const deleteTask = 'DELETE FROM tasks WHERE id = ?';

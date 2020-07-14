@@ -25,22 +25,22 @@ const router = express.Router();
 //   }
 // });
 
-router.post('/register', async (req: Request, res: Response, next: NextFunction) => {
-  console.log('as')
-  const user = req.body;
-
-  console.log(user);
-  return;
-  try {
-    const results = await db.post(user);
-    res.json('success').status(200);
-  } catch (err) {
-    if (err.code === 'ER_DUP_ENTRY') {
-      return res.json('email already exists').status(400);
+router.post(
+  '/register',
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log('a')
+    const user = req.body;
+    try {
+      const results = await db.post(user);
+      res.json('success').status(200);
+    } catch (err) {
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.json('email already exists').status(400);
+      }
+      res.sendStatus(500);
     }
-    res.sendStatus(500);
   }
-});
+);
 
 // router.delete(
 //   '/:id',

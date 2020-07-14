@@ -1,6 +1,6 @@
 import Task from '../interfaces/Task';
-import * as db from './index';
-// const db = require('./index');
+// import * as db from './index';
+const db = require('./index');
 
 interface DB {
   all: () => void;

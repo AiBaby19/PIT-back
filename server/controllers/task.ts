@@ -11,7 +11,6 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     
     const results: Task[] = await db.all();
-    console.log('res', results)
     res.json(results).status(200);
   } catch (err) {
     console.log(err)

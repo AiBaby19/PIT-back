@@ -1,4 +1,5 @@
 require('dotenv').config();
+export {};
 
 const mysql = require('mysql');
 
