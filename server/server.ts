@@ -28,7 +28,9 @@ app.get('*', (req, res) => {
 
 app.use(handleErrors);
 
-const port = process.env.PORT || '3001';
+// const port = process.env.PORT || '3001';
+const port = 80;
+
 
 app.listen(port, () => {
   console.log(`server is running on ${port}`);
