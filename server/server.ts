@@ -29,7 +29,7 @@ app.get('*', (req, res) => {
 app.use(handleErrors);
 
 // const port = process.env.PORT || '3001';
-const port = 80;
+const port = 8080;
 
 
 app.listen(port, () => {
