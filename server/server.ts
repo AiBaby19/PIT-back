@@ -2,14 +2,12 @@ import express from 'express';
 require('dotenv').config();
 
 const handleErrors = require('./middleware/handleErrors');
-const { BadRequest } = require('./utils/errors');
 
 const taskController = require('./controllers/task');
 const authController = require('./controllers/auth');
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const env = process.env.NODE_ENV || 'development';
 
 const app = express();
 
