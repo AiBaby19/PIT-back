@@ -24,7 +24,6 @@ users.all = () => {
 };
 
 users.auth = (userId: number, token: string) => {
-    console.log(userId, token)
   const getUser = 'SELECT isAdmin FROM users WHERE id = ? AND token = ?';
 
   return new Promise((resolve, reject) => {
