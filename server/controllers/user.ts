@@ -33,7 +33,7 @@ router.post(
         res.json(answer).status(200);
       }
     } catch (err) {
-      res.sendStatus(500);
+      res.sendStatus(500); 
     }
   }
 );
