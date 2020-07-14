@@ -1,5 +1,6 @@
 const express = require('express');
 import { Request, Response, NextFunction } from 'express';
+import {User} from '../interfaces/User';
 
 const { BadRequest, NotFound } = require('../utils/errors');
 
@@ -24,11 +25,13 @@ router.post(
       if (!email || !password) {
         throw new BadRequest('לא סופקו פרטים');
       }
-      const user: string = await db.login(email, password);
+
+      const user: User = await db.login(email, password);
 
       if (!user) {
         throw new NotFound('משתמש לא נמצא');
       }
+
       res.json(user).status(200);
     } catch (err) {
       next(err);

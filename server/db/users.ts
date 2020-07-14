@@ -40,12 +40,12 @@ users.auth = (userId: number, token: string) => {
 };
 
 users.login = (email: string, password: string) => {
-  const getUser = 'SELECT * FROM users WHERE email = ? AND password = ?';
+  const getUser = 'SELECT id as userId, token FROM users WHERE email = ? AND password = ?';
 
   return new Promise((resolve, reject) => {
     db.query(getUser, [email, password], (err: any, results: any) => {
       if (err) return reject(err);
-
+      
       return resolve(results[0]);
     });
   });

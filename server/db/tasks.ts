@@ -15,7 +15,7 @@ const tasks: DB = {};
 
 tasks.all = () => {
   const getAllTasks = 'SELECT * FROM tasks';
-  
+
   return new Promise((resolve, reject) => {
     db.query(getAllTasks, (err: any, results: any) => {
       if (err) return reject(err);
@@ -27,7 +27,7 @@ tasks.all = () => {
 
 tasks.byUser = (userId: number) => {
   const getUserTasks = 'SELECT * FROM tasks WHERE userId = ?';
-  
+
   return new Promise((resolve, reject) => {
     db.query(getUserTasks, userId, (err: any, results: any) => {
       if (err) return reject(err);
@@ -49,7 +49,7 @@ tasks.one = (id: number) => {
   });
 };
 
-tasks.post = async ({ userId ,name, phone, email, date }: Task) => {
+tasks.post = async ({ userId, name, phone, email, date }: Task) => {
   const insertTask =
     'INSERT INTO tasks(userId, name, phone, email, date) values(?, ?, ?, ?, ?)';
 
@@ -57,11 +57,8 @@ tasks.post = async ({ userId ,name, phone, email, date }: Task) => {
 
   return new Promise((resolve, reject) => {
     db.query(insertTask, values, (err: any, results: any) => {
-      if (err) {
-        console.log('err',err)
-        return reject(err);
-      }
-    
+      if (err) return reject(err);
+
       return resolve(results);
     });
   });
