@@ -9,6 +9,7 @@ const authController = require('./controllers/auth');
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const env = process.env.NODE_ENV || 'development';
 
 const app = express();
 
@@ -20,6 +21,10 @@ app.use(cors());
 
 app.use('/api/tasks', taskController);
 app.use('/api/auth', authController);
+
+app.get('*', (req, res) => {
+  res.status(404).send('כתובת שהוכנסה שגויה');
+});
 
 app.use(handleErrors);
 

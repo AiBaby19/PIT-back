@@ -9,7 +9,7 @@ const db = mysql.createPool({
   user: 'root',
   database: process.env.DB,
   host: process.env.HOST,
-  port: process.env.DB_PORT,
+  port: process.env.PORT,
 });
 
 module.exports = db;
