@@ -3,6 +3,7 @@ const db = require('./index');
 
 interface DB {
   all: () => void;
+  auth: (user: any) => void;
   login: (email: string, password: string) => void;
   register: (user: User) => void;
 }
@@ -22,17 +23,29 @@ users.all = () => {
   });
 };
 
-users.login = (email: string, password: string) => {
+users.auth = (user: any) => {
+  const getUser = 'SELECT isAdmin FROM users WHERE password = ?';
+  return new Promise((resolve, reject) => {
+    db.query(getUser, user, (err: any, results: any) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+      return resolve(!!results[0].isAdmin);
+    });
+  });
+};
 
+users.login = (email: string, password: string) => {
   const getUser = 'SELECT password FROM users WHERE email = ? AND password = ?';
 
   return new Promise((resolve, reject) => {
     db.query(getUser, [email, password], (err: any, results: any) => {
       if (err) {
-          console.log(err)
-          return reject(err);
+        console.log(err);
+        return reject(err);
       }
-      
+
       return resolve(results[0]?.password);
     });
   });
@@ -42,7 +55,7 @@ users.register = async ({ email, password, isAdmin }: User) => {
   const insertUser =
     'INSERT INTO users(email, password, isAdmin) values(?, ?, ?)';
 
-  const values = [email, password, isAdmin];
+  const values = [email.toLowerCase(), password, isAdmin];
   return new Promise((resolve, reject) => {
     db.query(insertUser, values, (err: any, results: any) => {
       if (err) return reject(err);

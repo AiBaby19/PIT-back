@@ -1,9 +1,9 @@
 import Task from '../interfaces/Task';
-// import * as db from './index';
 const db = require('./index');
 
 interface DB {
   all: () => void;
+  byUser: (user: any) => void;
   one: (id: number) => void;
   post: (task: Task) => void;
   delete: (id: number) => void;
@@ -25,7 +25,20 @@ tasks.all = () => {
   });
 };
 
+tasks.byUser = (user: any) => {
+  const getUserTasks = 'SELECT * FROM tasks WHERE user = ?';
+  
+  return new Promise((resolve, reject) => {
+    db.query(getUserTasks, user, (err: any, results: any) => {
+      if (err) return reject(err);
+
+      return resolve(results);
+    });
+  });
+};
+
 tasks.one = (id: number) => {
+  console.log(id)
   const getTask = 'SELECT * FROM tasks WHERE id = ?';
 
   return new Promise((resolve, reject) => {
@@ -37,16 +50,16 @@ tasks.one = (id: number) => {
   });
 };
 
-tasks.post = async ({ name, phone, email, date }: Task) => {
+tasks.post = async ({ user ,name, phone, email, date }: Task) => {
   const insertTask =
-    'INSERT INTO tasks(name, phone, email, date) values(?, ?, ?, ?)';
+    'INSERT INTO tasks(user, name, phone, email, date) values(?, ?, ?, ?, ?)';
 
-  const values = [name, phone, email, date];
+  const values = [user, name, phone, email, date];
 
   return new Promise((resolve, reject) => {
     db.query(insertTask, values, (err: any, results: any) => {
       if (err) return reject(err);
-
+    
       return resolve(results);
     });
   });

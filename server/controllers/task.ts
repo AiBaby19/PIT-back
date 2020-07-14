@@ -4,13 +4,19 @@ import { Request, Response, NextFunction } from 'express';
 import Task from '../interfaces/Task';
 
 const db = require('../db/tasks');
+const userDB = require('../db/users');
 
 const router = express.Router();
 
-router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+const authUser = () => {
+
+}
+
+router.get('/by-user/:user', async (req: Request, res: Response, next: NextFunction) => {
+  const isAdmin = await userDB.auth(req.params.user);
+  console.log(isAdmin)
   try {
-    
-    const results: Task[] = await db.all();
+    const results: Task[] = isAdmin ? await db.all() : await db.byUser(req.params.user);
     res.json(results).status(200);
   } catch (err) {
     console.log(err)
@@ -21,7 +27,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const results: Task = await db.one(req.params.id);
-    res.json(results);
+    res.json(results).status(200);
   } catch (err) {
     res.sendStatus(500);
   }
