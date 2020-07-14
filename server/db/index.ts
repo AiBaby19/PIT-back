@@ -8,8 +8,8 @@ const db = mysql.createPool({
   password: 'JVUy&nr0en%',
   user: 'admin',
   database: 'pit',
-  host: '3306',
-  port: 'database-aws.ca6u1sz8llmi.eu-west-1.rds.amazonaws.com',
+  host: 'database-aws.ca6u1sz8llmi.eu-west-1.rds.amazonaws.com',
+  port: '3306',
 
   // connectionLimit: process.env.CONNECTION_LIMIT,
   // password: process.env.PASSWORD,
