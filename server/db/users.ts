@@ -1,9 +1,10 @@
 import { User } from '../interfaces/User';
 const db = require('./index');
+const crypto = require('crypto');
 
 interface DB {
   all: () => void;
-  auth: (user: any) => void;
+  auth: (userId: number, token: string) => void;
   login: (email: string, password: string) => void;
   register: (user: User) => void;
 }
@@ -23,73 +24,50 @@ users.all = () => {
   });
 };
 
-users.auth = (user: any) => {
-  const getUser = 'SELECT isAdmin FROM users WHERE password = ?';
+users.auth = (userId: number, token: string) => {
+  const getUser = 'SELECT isAdmin FROM users WHERE id = ? AND token = ?';
+
   return new Promise((resolve, reject) => {
-    db.query(getUser, user, (err: any, results: any) => {
+    db.query(getUser, [userId, token], (err: any, results: any) => {
       if (err) {
         console.log(err);
         return reject(err);
       }
+      console.log('res', results);
       return resolve(!!results[0].isAdmin);
     });
   });
 };
 
 users.login = (email: string, password: string) => {
-  const getUser = 'SELECT password FROM users WHERE email = ? AND password = ?';
+  const getUser = 'SELECT * FROM users WHERE email = ? AND password = ?';
 
   return new Promise((resolve, reject) => {
     db.query(getUser, [email, password], (err: any, results: any) => {
       if (err) {
-        console.log(err);
         return reject(err);
       }
-
-      return resolve(results[0]?.password);
+      return resolve({ userId: results[0]?.id, token: results[0]?.token });
     });
   });
 };
 
 users.register = async ({ email, password, isAdmin }: User) => {
+  const token = crypto.randomBytes(64).toString('hex');
   const insertUser =
-    'INSERT INTO users(email, password, isAdmin) values(?, ?, ?)';
+    'INSERT INTO users(email, password, isAdmin, token) values(?, ?, ?, ?)';
 
-  const values = [email.toLowerCase(), password, isAdmin];
+  const values = [email.toLowerCase(), password, isAdmin, token];
+
   return new Promise((resolve, reject) => {
     db.query(insertUser, values, (err: any, results: any) => {
-      if (err) return reject(err);
+      if (err) {
+        return reject(err);
+      }
 
-      return resolve(password);
+      return resolve({ token, userId: results.insertId });
     });
   });
 };
-
-// tasks.delete = async (id: number) => {
-//   const deleteTask = 'DELETE FROM tasks WHERE id = ?';
-
-//   return new Promise((resolve, reject) => {
-//     db.query(deleteTask, id, (err: any, results: any) => {
-//       if (err) return reject(err);
-
-//       return resolve(results);
-//     });
-//   });
-// };
-
-// tasks.put = async ({ name, phone, email, date }: Task, id: number) => {
-//   const updateTask =
-//     'UPDATE tasks SET name = ?, phone = ?, email = ?, date = ?  WHERE id = ?';
-
-//   const values = [name, phone, email, date, id];
-
-//   return new Promise((resolve, reject) => {
-//     db.query(updateTask, values, (err: any, results: any) => {
-//       if (err) return reject(err);
-
-//       return resolve(results);
-//     });
-//   });
-// };
 
 module.exports = users;

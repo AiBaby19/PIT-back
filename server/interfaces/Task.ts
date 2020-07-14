@@ -1,6 +1,6 @@
 export default interface Task {
     id?: number;
-    user?: any;
+    userId?: any;
     name: string;
     phone: string;
     email: string;

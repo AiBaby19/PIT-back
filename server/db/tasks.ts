@@ -3,7 +3,7 @@ const db = require('./index');
 
 interface DB {
   all: () => void;
-  byUser: (user: any) => void;
+  byUser: (userId: number) => void;
   one: (id: number) => void;
   post: (task: Task) => void;
   delete: (id: number) => void;
@@ -25,11 +25,11 @@ tasks.all = () => {
   });
 };
 
-tasks.byUser = (user: any) => {
-  const getUserTasks = 'SELECT * FROM tasks WHERE user = ?';
+tasks.byUser = (userId: number) => {
+  const getUserTasks = 'SELECT * FROM tasks WHERE userId = ?';
   
   return new Promise((resolve, reject) => {
-    db.query(getUserTasks, user, (err: any, results: any) => {
+    db.query(getUserTasks, userId, (err: any, results: any) => {
       if (err) return reject(err);
 
       return resolve(results);
@@ -38,7 +38,6 @@ tasks.byUser = (user: any) => {
 };
 
 tasks.one = (id: number) => {
-  console.log(id)
   const getTask = 'SELECT * FROM tasks WHERE id = ?';
 
   return new Promise((resolve, reject) => {
@@ -50,15 +49,18 @@ tasks.one = (id: number) => {
   });
 };
 
-tasks.post = async ({ user ,name, phone, email, date }: Task) => {
+tasks.post = async ({ userId ,name, phone, email, date }: Task) => {
   const insertTask =
-    'INSERT INTO tasks(user, name, phone, email, date) values(?, ?, ?, ?, ?)';
+    'INSERT INTO tasks(userId, name, phone, email, date) values(?, ?, ?, ?, ?)';
 
-  const values = [user, name, phone, email, date];
+  const values = [userId, name, phone, email, date];
 
   return new Promise((resolve, reject) => {
     db.query(insertTask, values, (err: any, results: any) => {
-      if (err) return reject(err);
+      if (err) {
+        console.log('err',err)
+        return reject(err);
+      }
     
       return resolve(results);
     });

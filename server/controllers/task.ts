@@ -8,13 +8,9 @@ const userDB = require('../db/users');
 
 const router = express.Router();
 
-const authUser = () => {
 
-}
-
-router.get('/by-user/:user', async (req: Request, res: Response, next: NextFunction) => {
-  const isAdmin = await userDB.auth(req.params.user);
-  console.log(isAdmin)
+router.get('/by-user/:user/:token', async (req: Request, res: Response, next: NextFunction) => {
+  const isAdmin = await userDB.auth(req.params.user, req.params.token);
   try {
     const results: Task[] = isAdmin ? await db.all() : await db.byUser(req.params.user);
     res.json(results).status(200);
@@ -35,7 +31,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   const task = req.body;
-
+  
   try {
     const results = await db.post(task);
     res.json('success').status(200);
